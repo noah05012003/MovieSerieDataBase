@@ -9,9 +9,11 @@ CREATE TABLE media (
     release_date DATE,
     vote_average DECIMAL(3, 1),
     poster_path VARCHAR(255),
-    media_type ENUM('movie', 'series') NOT NULL, -- Type du média : film ou série
+    media_type ENUM('movie', 'tv') NOT NULL, -- Type du média : film ou série
     UNIQUE (title, release_date) -- Pour éviter les doublons
 );
+
+
 
 -- Table pour les Films
 CREATE TABLE movies (
@@ -106,7 +108,11 @@ CREATE TABLE favorites (
 
 -- Indexation pour améliorer les performances:
 
--- Fonction à faire :
+# -------------------------------
+# Fonction à faire :
+# - ajouter/retirer un movie ou une serie de Favoris
+# - Création d’un compte pour l’utilisateur ou supprimer l’utilisateur
+# -------------------------------
 
 
 
