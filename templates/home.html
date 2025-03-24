@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accueil - Screenly</title>
+
+  <link rel="stylesheet" href="/static/home.css">
+</head>
+<body>
+
+  <header class="top-nav">
+    <div class="nav-left">
+      <!-- Logo -->
+      <img src="/static/img/logo.png" alt="Screenly Logo" class="logo"/>
+      <ul class="nav-menu">
+        <li><a href="home.html" class="active">Accueil</a></li>
+        <li><a href="films.html">Films</a></li>
+        <li><a href="series.html">Séries</a></li>
+        <li><a href="genres.html">Genres</a></li>
+        <li><a href="favoris.html">Favoris</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-right">
+     
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Rechercher un titre, un acteur...">
+        <button class="search-btn">Rechercher</button>
+      </div>
+
+
+      <div class="filter-container">
+        <label for="filter-select">Afficher :</label>
+        <select id="filter-select">
+          <option value="all">Tous</option>
+          <option value="films">Films</option>
+          <option value="series">Séries</option>
+        </select>
+      </div>
+
+      <a href="login.html" class="sign-in-btn">Sign In</a>
+    </div>
+  </header>
+
+  <!-- Hero Carousel Section -->
+  <div class="carousel-container">
+    <!-- Slides -->
+    <div class="carousel-slide" style="background-image: url('/static/img/house.png');">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <h2 class="slide-title">Dr. House</h2>
+        <p class="slide-description">
+          Sarcastique, brillant et peu orthodoxe. Suivez le Dr. House dans ses enquêtes médicales.
+        </p>
+        <span class="slide-tag">#2 au Canada</span>
+        <button class="watch-now-btn">Regarder</button>
+        <p class="slide-included">Inclus avec Screenly</p>
+      </div>
+    </div>
+
+    <div class="carousel-slide" style="background-image: url('/static/img/mentalist.jpg');">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <h2 class="slide-title">The Mentalist</h2>
+        <p class="slide-description">
+          Patrick Jane résout des affaires complexes grâce à ses incroyables talents d’observation.
+        </p>
+        <span class="slide-tag">#4 au Canada</span>
+        <button class="watch-now-btn">Regarder</button>
+        <p class="slide-included">Inclus avec Screenly</p>
+      </div>
+    </div>
+
+    <div class="carousel-slide" style="background-image: url('/static/img/reacher.jpg');">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <h2 class="slide-title">Reacher</h2>
+        <p class="slide-description">
+          Jack Reacher, ex-militaire, défend la justice partout où il passe.
+        </p>
+        <span class="slide-tag">#1 au Canada</span>
+        <button class="watch-now-btn">Regarder</button>
+        <p class="slide-included">Inclus avec Screenly</p>
+      </div>
+    </div>
+
+    <!-- Carousel Navigation Arrows -->
+    <button class="carousel-btn prev-btn">&#10094;</button>
+    <button class="carousel-btn next-btn">&#10095;</button>
+  </div>
+
+
+  <section class="secondary-carousel-section">
+    <h2>Nouveautés</h2>
+    <div class="secondary-carousel">
+      <div class="secondary-slide">
+        <img src="https://picsum.photos/300/200?random=10" alt="Nouveauté 1">
+      </div>
+      <div class="secondary-slide">
+        <img src="https://picsum.photos/300/200?random=11" alt="Nouveauté 2">
+      </div>
+      <div class="secondary-slide">
+        <img src="https://picsum.photos/300/200?random=12" alt="Nouveauté 3">
+      </div>
+      <div class="secondary-slide">
+        <img src="https://picsum.photos/300/200?random=13" alt="Nouveauté 4">
+      </div>
+    </div>
+  </section>
+
+  <section class="section-row">
+    <h2>Continue Watching</h2>
+    <div class="row-cards">
+      <article class="card-item">
+        <img src="https://picsum.photos/200/300?random=1" alt="Film 1">
+      </article>
+      <article class="card-item">
+        <img src="https://picsum.photos/200/300?random=2" alt="Film 2">
+      </article>
+      <article class="card-item">
+        <img src="https://picsum.photos/200/300?random=3" alt="Film 3">
+      </article>
+    </div>
+  </section>
+
+  <section class="section-row">
+    <h2>Recommended for You</h2>
+    <div class="row-cards">
+      <article class="card-item">
+        <img src="https://picsum.photos/200/300?random=4" alt="Recommended 1">
+      </article>
+      <article class="card-item">
+        <img src="https://picsum.photos/200/300?random=5" alt="Recommended 2">
+      </article>
+      <article class="card-item">
+        <img src="https://picsum.photos/200/300?random=6" alt="Recommended 3">
+      </article>
+    </div>
+  </section>
+
+
+  <footer>
+    <div class="footer-links">
+      <a href="#">Aide</a>
+      <a href="#">Presse</a>
+      <a href="#">Publicité</a>
+      <a href="#">Carrières</a>
+      <a href="#">Conditions d'utilisation</a>
+    </div>
+    <p>© 2025 Screenly. Tous droits réservés.</p>
+  </footer>
+
+  <!-- Carousel JavaScript -->
+  <script>
+    // Primary (Hero) Carousel
+    const slides = document.querySelectorAll(".carousel-slide");
+    const prevBtn = document.querySelector(".prev-btn");
+    const nextBtn = document.querySelector(".next-btn");
+    let currentSlide = 0;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.style.transform = `translateX(${(i - index) * 100}%)`;
+      });
+    }
+    showSlide(currentSlide);
+
+    nextBtn.addEventListener("click", () => {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    });
+
+    prevBtn.addEventListener("click", () => {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(currentSlide);
+    });
+
+   
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }, 5000);
+
+    
+    const secondaryCarousel = document.querySelector(".secondary-carousel");
+   
+    const filterSelect = document.getElementById('filter-select');
+    filterSelect.addEventListener('change', (e) => {
+      const choice = e.target.value;
+      if (choice === 'films') {
+        window.location.href = 'films.html';
+      } else if (choice === 'series') {
+        window.location.href = 'series.html';
+      } else {
+     
+        window.location.href = 'home.html';
+      }
+    });
+  </script>
+</body>
+</html>
