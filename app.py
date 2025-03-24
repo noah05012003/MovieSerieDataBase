@@ -1,171 +1,187 @@
-from flask import Flask, render_template, jsonify, flash, request, session, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_session import Session
 import mysql.connector
-from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from dotenv import load_dotenv
 import os
 
-load_dotenv('security.env')
-
+# Initialisation
+load_dotenv("security.env")
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.secret_key = os.getenv("SECRET_KEY")
 app.config['SESSION_TYPE'] = 'filesystem'
-
 Session(app)
+
 bcrypt = Bcrypt(app)
 
-# Connexion à la base de données
-cnx = mysql.connector.connect(
-    user=os.getenv('DB_USER'),
-    password=os.getenv('DB_PASSWORD'),
-    host=os.getenv('DB_HOST'),
-    database=os.getenv('DB_NAME')
-)
+# Connexion base de données
+DB_CONFIG = {
+    "host": os.getenv("DB_HOST"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "database": os.getenv("DB_NAME")
+}
 
-cursor = cnx.cursor()
+# Flask-Login
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.init_app(app)
 
+class User(UserMixin):
+    def __init__(self, id):
+        self.id = id
 
-# ---------------------------
-# Routes pour les utilisateurs
-# ---------------------------
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
 
-@app.route('/register', methods=['POST'])
-def register():
-    data = request.form
-    username = data['username']
-    email = data['email']
-    password = data['password']
-
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-
-    query = "INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s)"
-    values = (username, email, hashed_password)
-
-    cursor.execute(query, values)
-    cnx.commit()
-
-    flash("Compte créé avec succès !", "success")
-    return redirect(url_for('login'))
-
-
-@app.route('/login', methods=['POST'])
+# Page de connexion
+@app.route('/', methods=['GET','POST'])
 def login():
-    data = request.form
-    email = data['email']
-    password = data['password']
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
 
-    cursor.execute("SELECT user_id, password_hash FROM users WHERE email = %s", (email,))
-    user = cursor.fetchone()
+        conn = mysql.connector.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        cursor.execute("SELECT user_id, password_hash FROM users WHERE email = %s", (email,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
 
-    if user and bcrypt.check_password_hash(user[1], password):
-        session['user_id'] = user[0]
-        flash("Connexion réussie !", "success")
-        return redirect(url_for('favorites'))
-    else:
-        flash("Échec de la connexion", "danger")
-        return redirect(url_for('login'))
+        if user and bcrypt.check_password_hash(user[1], password):
+            login_user(User(user[0]))  # Flask-Login authentifie l’utilisateur
+            flash("Connexion réussie !", "success")
+            return redirect(url_for('home'))
+        else:
+            flash("Email ou mot de passe incorrect", "danger")
+            return redirect(url_for('login'))
 
+    return render_template('login.html')
 
-@app.route('/logout')
-def logout():
-    session.pop('user_id', None)
-    flash("Déconnexion réussie.", "success")
-    return redirect(url_for('login'))
+# Inscription
+@app.route('/signUp', methods=['GET', 'POST'])
+def sign_up():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        passwordconfirm = request.form['passwordconfirm']
 
+        if password != passwordconfirm:
+            flash("Les mots de passe ne correspondent pas", "warning")
+            return redirect(url_for('sign_up'))
 
-# ---------------------------
-# Routes pour gérer les favoris
-# ---------------------------
+        hashed = bcrypt.generate_password_hash(password).decode('utf-8')
+        conn = mysql.connector.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                "INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s)",
+                (username, email, hashed)
+            )
+            conn.commit()
+            flash("Compte créé avec succès !", "success")
+            return redirect(url_for('login'))
+        except mysql.connector.Error as e:
+            flash("Erreur lors de la création du compte : " + str(e), "danger")
+            return redirect(url_for('sign_up'))
+        finally:
+            cursor.close()
+            conn.close()
+    return render_template("signUp.html")
 
-@app.route('/favorites')
+# Accueil
+@app.route('/home')
 @login_required
-def favorites():
-    user_id = session.get('user_id')
-
-    cursor.execute(""" 
-    SELECT media.media_id, media.title, media.media_type
-        FROM favorites
-        JOIN media ON favorites.media_id = media.media_id
-        WHERE favorites.user_id = %s
-    """, (user_id,))
-
-    favorites = cursor.fetchall()
-
-    return jsonify(favorites)
+def home():
+    return render_template("home.html")
 
 
-@app.route('/add_favorite/<int:media_id>', methods=['POST'])
-@login_required
-def add_favorite(media_id):
-    user_id = session.get('user_id')
 
-    query = "INSERT IGNORE INTO favorites (user_id, media_id) VALUES (%s, %s)"
-    values = (user_id, media_id)
+# Affichage des films
+@app.route('/movies')
+def movies():
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM media WHERE media_type = 'movie'")
+    movies = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("films.html", movies=movies)
 
-    cursor.execute(query, values)
-    cnx.commit()
+# Affichage des séries
+@app.route('/series')
+def series():
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM media WHERE media_type = 'tv'")
+    series = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("series.html", series=series)
 
-    flash("Ajouté aux favoris.", "success")
-    return redirect(url_for('favorites'))
-
-
-@app.route('/remove_favorite/<int:media_id>', methods=['POST'])
-@login_required
-def remove_favorite(media_id):
-    user_id = session.get('user_id')
-
-    query = "DELETE FROM favorites WHERE user_id = %s AND media_id = %s"
-    values = (user_id, media_id)
-
-    cursor.execute(query, values)
-    cnx.commit()
-
-    flash("Retiré des favoris.", "success")
-    return redirect(url_for('favorites'))
-
-
-# ---------------------------
-# Routes pour gérer les médias
-# ---------------------------
-
-@app.route('/media')
-def get_all_media():
-    cursor.execute("SELECT * FROM media")
-    media_list = cursor.fetchall()
-    return jsonify(media_list)
-
-
-@app.route('/media/<int:media_id>')
-def get_media(media_id):
-    cursor.execute("SELECT * FROM media WHERE media_id = %s", (media_id,))
-    media = cursor.fetchone()
-    return jsonify(media)
-
-
+# Affichage des genres
 @app.route('/genres')
-def get_all_genres():
+def genres():
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM genres")
     genres = cursor.fetchall()
-    return jsonify(genres)
+    cursor.close()
+    conn.close()
+    return render_template("genres.html", genres=genres)
 
-
-@app.route('/media/<int:media_id>/actors')
-def get_media_actors(media_id):
+# Favoris de l'utilisateur
+@app.route('/favoris')
+@login_required
+def favoris():
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor(dictionary=True)
     cursor.execute("""
-        SELECT actors.name, actors.character_name
-        FROM media_to_cast
-        JOIN actors ON media_to_cast.cast_id = actors.cast_id
-        WHERE media_to_cast.media_id = %s
-    """, (media_id,))
+        SELECT media.* FROM favorites
+        JOIN media ON media.media_id = favorites.media_id
+        WHERE favorites.user_id = %s
+    """, (current_user.id,))
+    favoris = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("favoris.html", favoris=favoris)
 
-    actors = cursor.fetchall()
-    return jsonify(actors)
+# Ajouter un favori
+@app.route('/add_favori/<int:media_id>', methods=['POST'])
+@login_required
+def add_favori(media_id):
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+    cursor.execute("INSERT IGNORE INTO favorites (user_id, media_id) VALUES (%s, %s)", (current_user.id, media_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    flash("Ajouté aux favoris", "success")
+    return redirect(url_for('favoris'))
 
+# Retirer un favori
+@app.route('/remove_favori/<int:media_id>', methods=['POST'])
+@login_required
+def remove_favori(media_id):
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM favorites WHERE user_id = %s AND media_id = %s", (current_user.id, media_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    flash("Retiré des favoris", "info")
+    return redirect(url_for('favoris'))
 
-
-
+# Déconnexion
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("Vous êtes déconnecté.", "info")
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.run(debug=True,host='127.0.0.1',port=5000)
+    app.run(debug=True)

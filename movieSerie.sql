@@ -114,5 +114,5 @@ CREATE TABLE favorites (
 # - Création d’un compte pour l’utilisateur ou supprimer l’utilisateur
 # -------------------------------
 
-
+select * From media;
 
