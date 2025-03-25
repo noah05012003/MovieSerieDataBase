@@ -5,47 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Accueil - Screenly</title>
 
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Your existing CSS -->
   <link rel="stylesheet" href="/static/home.css">
+
+  <!-- ScrollReveal (if you want reveal animations) -->
+  <script src="https://unpkg.com/scrollreveal"></script>
 </head>
 <body>
 
+  <!-- HEADER / NAV -->
   <header class="top-nav">
     <div class="nav-left">
-      <!-- Logo -->
       <img src="/static/img/logo.png" alt="Screenly Logo" class="logo"/>
+
       <ul class="nav-menu">
+      
         <li><a href="/home" class="active">Accueil</a></li>
-        <li><a href="/films">Films</a></li>
+        <li><a href="/movies">Films</a></li>
         <li><a href="/series">Séries</a></li>
         <li><a href="/genres">Genres</a></li>
         <li><a href="/favoris">Favoris</a></li>
       </ul>
     </div>
-
     <div class="nav-right">
-     
-      <div class="search-container">
-        <input type="text" class="search-input" placeholder="Rechercher un titre, un acteur...">
-        <button class="search-btn">Rechercher</button>
-      </div>
+      <!-- Magnifying Glass (inline SVG) -->
+      <button class="search-trigger" aria-label="Search">
+        <svg width="24" height="24" fill="none" stroke="#fff" stroke-linecap="round" 
+             stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
 
-
-      <div class="filter-container">
-        <label for="filter-select">Afficher :</label>
-        <select id="filter-select">
-          <option value="all">Tous</option>
-          <option value="films">Films</option>
-          <option value="series">Séries</option>
-        </select>
-      </div>
-
+      <!-- Sign In Button -->
       <a href="/login" class="sign-in-btn">Sign In</a>
     </div>
   </header>
 
-  <!-- Hero Carousel Section -->
+  <!-- FULLSCREEN SEARCH OVERLAY (Hidden by Default) -->
+  <div class="search-overlay hidden">
+    <div class="search-overlay-content">
+      <button class="close-search-btn">&times;</button>
+      <h2>Rechercher</h2>
+      <input type="text" placeholder="Tapez votre recherche..." />
+    </div>
+  </div>
+
+  <!-- HERO CAROUSEL SECTION -->
   <div class="carousel-container">
-    <!-- Slides -->
+    <!-- Slide 1 -->
     <div class="carousel-slide" style="background-image: url('/static/img/house.png');">
       <div class="slide-overlay"></div>
       <div class="slide-content">
@@ -54,11 +65,12 @@
           Sarcastique, brillant et peu orthodoxe. Suivez le Dr. House dans ses enquêtes médicales.
         </p>
         <span class="slide-tag">#2 au Canada</span>
-        <button class="watch-now-btn">Regarder</button>
+        <button class="watch-now-btn">Visionner</button>
         <p class="slide-included">Inclus avec Screenly</p>
       </div>
     </div>
 
+    <!-- Slide 2 -->
     <div class="carousel-slide" style="background-image: url('/static/img/mentalist.jpg');">
       <div class="slide-overlay"></div>
       <div class="slide-content">
@@ -67,11 +79,12 @@
           Patrick Jane résout des affaires complexes grâce à ses incroyables talents d’observation.
         </p>
         <span class="slide-tag">#4 au Canada</span>
-        <button class="watch-now-btn">Regarder</button>
+        <button class="watch-now-btn">Visionner</button>
         <p class="slide-included">Inclus avec Screenly</p>
       </div>
     </div>
 
+    <!-- Slide 3 -->
     <div class="carousel-slide" style="background-image: url('/static/img/reacher.jpg');">
       <div class="slide-overlay"></div>
       <div class="slide-content">
@@ -80,7 +93,35 @@
           Jack Reacher, ex-militaire, défend la justice partout où il passe.
         </p>
         <span class="slide-tag">#1 au Canada</span>
-        <button class="watch-now-btn">Regarder</button>
+        <button class="watch-now-btn">Visionner</button>
+        <p class="slide-included">Inclus avec Screenly</p>
+      </div>
+    </div>
+
+    <!-- Slide 4 (Suits) -->
+    <div class="carousel-slide" style="background-image: url('/static/img/suits.png');">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <h2 class="slide-title">Suits</h2>
+        <p class="slide-description">
+          De jeunes avocats brillants naviguent dans le monde impitoyable des affaires et de la justice.
+        </p>
+        <span class="slide-tag">#3 au Canada</span>
+        <button class="watch-now-btn">Visionner</button>
+        <p class="slide-included">Inclus avec Screenly</p>
+      </div>
+    </div>
+
+    <!-- Slide 5 (The Office) -->
+    <div class="carousel-slide" style="background-image: url('/static/img/office.png');">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <h2 class="slide-title">The Office</h2>
+        <p class="slide-description">
+          Une équipe de bureau loufoque fait face aux absurdités du quotidien dans cette comédie culte.
+        </p>
+        <span class="slide-tag">#5 au Canada</span>
+        <button class="watch-now-btn">Visionner</button>
         <p class="slide-included">Inclus avec Screenly</p>
       </div>
     </div>
@@ -90,16 +131,15 @@
     <button class="carousel-btn next-btn">&#10095;</button>
   </div>
 
-   <main>
+  <!-- MAIN CONTENT -->
+  <main>
     <h1>Populaire cette semaine</h1>
-    <div class="media-container" id="media-container"></div>
+    <div class="media-container" id="media-container">
+      <!-- Your home.js script will inject DB-based movie/series cards here -->
+    </div>
   </main>
 
-
-  <script src="/static/home.js"></script>
-
-
-
+  <!-- FOOTER -->
   <footer>
     <div class="footer-links">
       <a href="#">Aide</a>
@@ -111,9 +151,12 @@
     <p>© 2025 Screenly. Tous droits réservés.</p>
   </footer>
 
-  <!-- Carousel JavaScript -->
+  <!-- 1) Your old home.js for DB injection -->
+  <script src="/static/home.js"></script>
+
+  <!-- 2) Inline Script for Carousel, Overlay, and (optional) ScrollReveal -->
   <script>
-    // Primary (Hero) Carousel
+    // === Carousel Logic ===
     const slides = document.querySelectorAll(".carousel-slide");
     const prevBtn = document.querySelector(".prev-btn");
     const nextBtn = document.querySelector(".next-btn");
@@ -136,27 +179,46 @@
       showSlide(currentSlide);
     });
 
-   
+    // Auto-slide every 5 seconds
     setInterval(() => {
       currentSlide = (currentSlide + 1) % slides.length;
       showSlide(currentSlide);
     }, 5000);
 
-    
-    const secondaryCarousel = document.querySelector(".secondary-carousel");
-   
-    const filterSelect = document.getElementById('filter-select');
-    filterSelect.addEventListener('change', (e) => {
-      const choice = e.target.value;
-      if (choice === 'films') {
-        window.location.href = 'films.html';
-      } else if (choice === 'series') {
-        window.location.href = 'series.html';
-      } else {
-     
-        window.location.href = 'home.html';
+    // === Search Overlay Logic ===
+    const searchBtn = document.querySelector(".search-trigger");
+    const searchOverlay = document.querySelector(".search-overlay");
+    const closeSearchBtn = document.querySelector(".close-search-btn");
+
+    // Show overlay
+    searchBtn.addEventListener("click", () => {
+      searchOverlay.classList.remove("hidden");
+      document.body.style.overflow = "hidden"; // prevent scrolling
+    });
+
+    // Close overlay
+    closeSearchBtn.addEventListener("click", () => {
+      searchOverlay.classList.add("hidden");
+      document.body.style.overflow = "auto"; // restore scrolling
+    });
+
+    // Click outside content to close
+    searchOverlay.addEventListener("click", (e) => {
+      if (e.target === searchOverlay) {
+        searchOverlay.classList.add("hidden");
+        document.body.style.overflow = "auto";
       }
     });
+
+   
+  
+     const sr = ScrollReveal({
+       origin: 'top',
+      distance: '80px',
+       duration: 2000,
+       reset: false
+     });
+    sr.reveal('.media-card', { interval: 200 });
   </script>
 </body>
 </html>

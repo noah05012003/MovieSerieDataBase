@@ -4,148 +4,88 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Favoris - Screenly</title>
-  <link rel="stylesheet" href="../static/home.css">
+  <link rel="stylesheet" href="/static/home.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/scrollreveal"></script>
 </head>
 <body>
-  <!-- Top Navigation -->
   <header class="top-nav">
     <div class="nav-left">
-      <img src="../static/img/logo.png" alt="Screenly Logo" class="logo"/>
+      <img src="/static/img/logo.png" alt="Screenly Logo" class="logo"/>
       <ul class="nav-menu">
         <li><a href="/home">Accueil</a></li>
-        <li><a href="/films">Films</a></li>
+        <li><a href="/movies">Films</a></li>
         <li><a href="/series">Séries</a></li>
         <li><a href="/genres">Genres</a></li>
         <li><a href="/favoris" class="active">Favoris</a></li>
       </ul>
     </div>
     <div class="nav-right">
-      <div class="search-container">
-        <button class="search-toggle">
-          <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24">
-            <path d="M10 2a8 8 0 015.9 13.7l5.7 5.7-1.4 1.4-5.7-5.7A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"></path>
-          </svg>
-        </button>
-        <input type="text" class="search-input" placeholder="Rechercher dans vos favoris..." />
-      </div>
-      <a href="/" class="sign-in-btn">Sign In</a>
+      <button class="search-trigger" aria-label="Search">
+        <svg width="24" height="24" fill="none" stroke="#fff" stroke-linecap="round" 
+             stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+      <a href="/login" class="sign-in-btn">Sign In</a>
     </div>
   </header>
 
-  <div class="carousel-container">
-    <!-- Slides -->
-    <div class="carousel-slide" style="background-image: url('../static/img/house.png');">
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <h2 class="slide-title">Dr. House</h2>
-        <p class="slide-description">
-          Sarcastique, brillant et peu orthodoxe. Suivez le Dr. House dans ses enquêtes médicales.
-        </p>
-        <span class="slide-tag">#2 au Canada</span>
-        <button class="watch-now-btn">Regarder</button>
-        <p class="slide-included">Inclus avec Screenly</p>
-      </div>
+  <div class="search-overlay hidden">
+    <div class="search-overlay-content">
+      <button class="close-search-btn">&times;</button>
+      <h2>Rechercher</h2>
+      <input type="text" placeholder="Tapez votre recherche..." />
     </div>
-
-    <div class="carousel-slide" style="background-image: url('../static/img/mentalist.jpg');">
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <h2 class="slide-title">The Mentalist</h2>
-        <p class="slide-description">
-          Patrick Jane résout des affaires complexes grâce à ses incroyables talents d’observation.
-        </p>
-        <span class="slide-tag">#4 au Canada</span>
-        <button class="watch-now-btn">Regarder</button>
-        <p class="slide-included">Inclus avec Screenly</p>
-      </div>
-    </div>
-
-    <div class="carousel-slide" style="background-image: url('../static/img/reacher.jpg');">
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <h2 class="slide-title">Reacher</h2>
-        <p class="slide-description">
-          Jack Reacher, ex-militaire, défend la justice partout où il passe.
-        </p>
-        <span class="slide-tag">#1 au Canada</span>
-        <button class="watch-now-btn">Regarder</button>
-        <p class="slide-included">Inclus avec Screenly</p>
-      </div>
-    </div>
-
-
-    <button class="carousel-btn prev-btn">&#10094;</button>
-    <button class="carousel-btn next-btn">&#10095;</button>
   </div>
-
-  <section class="section-row">
-    <h2>Mes Favoris</h2>
-    <div class="row-cards">
-      <article class="card-item">
-        <img src="https://picsum.photos/200/300?random=11" alt="Favori 1">
-        <div style="padding: 10px;">
-          <h3>Favori 1</h3>
-          <button class="watch-now-btn">Supprimer</button>
-        </div>
-      </article>
-      <article class="card-item">
-        <img src="https://picsum.photos/200/300?random=12" alt="Favori 2">
-        <div style="padding: 10px;">
-          <h3>Favori 2</h3>
-          <button class="watch-now-btn">Supprimer</button>
-        </div>
-      </article>
-      <article class="card-item">
-        <img src="https://picsum.photos/200/300?random=13" alt="Favori 3">
-        <div style="padding: 10px;">
-          <h3>Favori 3</h3>
-          <button class="watch-now-btn">Supprimer</button>
-        </div>
-      </article>
-      <article class="card-item">
-        <img src="https://picsum.photos/200/300?random=14" alt="Favori 4">
-        <div style="padding: 10px;">
-          <h3>Favori 4</h3>
-          <button class="watch-now-btn">Supprimer</button>
-        </div>
-      </article>
+  <br><br><br><br><br>
+  <main>
+    <h1>Mes Favoris</h1>
+    <div class="media-container" id="media-container">
+      <!-- home.js will inject favorite media cards here -->
     </div>
-  </section>
+  </main>
 
-  <!-- Footer -->
   <footer>
+    <div class="footer-links">
+      <a href="#">Aide</a>
+      <a href="#">Presse</a>
+      <a href="#">Publicité</a>
+      <a href="#">Carrières</a>
+      <a href="#">Conditions d'utilisation</a>
+    </div>
     <p>© 2025 Screenly. Tous droits réservés.</p>
   </footer>
 
-  <!-- Carousel JavaScript -->
+  <script src="/static/home.js"></script>
   <script>
-    const slides = document.querySelectorAll(".carousel-slide");
-    const prevBtn = document.querySelector(".prev-btn");
-    const nextBtn = document.querySelector(".next-btn");
-    let currentSlide = 0;
+    const searchBtn = document.querySelector(".search-trigger");
+    const searchOverlay = document.querySelector(".search-overlay");
+    const closeSearchBtn = document.querySelector(".close-search-btn");
 
-    showSlide(currentSlide);
-
-    nextBtn.addEventListener("click", () => {
-      currentSlide = (currentSlide + 1) % slides.length;
-      showSlide(currentSlide);
+    searchBtn.addEventListener("click", () => {
+      searchOverlay.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
     });
-
-    prevBtn.addEventListener("click", () => {
-      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-      showSlide(currentSlide);
+    closeSearchBtn.addEventListener("click", () => {
+      searchOverlay.classList.add("hidden");
+      document.body.style.overflow = "auto";
     });
-
-    setInterval(() => {
-      currentSlide = (currentSlide + 1) % slides.length;
-      showSlide(currentSlide);
-    }, 5000);
-
-    function showSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.style.transform = `translateX(${(i - index) * 100}%)`;
-      });
-    }
+    searchOverlay.addEventListener("click", (e) => {
+      if (e.target === searchOverlay) {
+        searchOverlay.classList.add("hidden");
+        document.body.style.overflow = "auto";
+      }
+    });
+    const sr = ScrollReveal({
+      origin: 'top',
+      distance: '80px',
+      duration: 2000,
+      reset: false
+    });
+    sr.reveal('.media-card', { interval: 200 });
   </script>
 </body>
 </html>
