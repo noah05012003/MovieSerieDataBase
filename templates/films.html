@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Films - Screenly</title>
   <link rel="stylesheet" href="/static/home.css">
+    <link rel="stylesheet" href="/static/films.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/scrollreveal"></script>
@@ -48,7 +49,7 @@
   <main>
     <h1>Films</h1>
     <!-- data-type attribute tells home.js to fetch movies -->
-    <div class="media-container" id="media-container" data-type="movie">
+    <div class="films-container" id="films-container">
       <!-- home.js will dynamically inject film cards here -->
     </div>
   </main>
@@ -65,7 +66,7 @@
     <p>© 2025 Screenly. Tous droits réservés.</p>
   </footer>
 
-  <script src="/static/home.js"></script>
+  <script src="/static/films.js"></script>
   <script>
     // (Same search overlay & ScrollReveal code as in home.html)
     const searchBtn = document.querySelector(".search-trigger");

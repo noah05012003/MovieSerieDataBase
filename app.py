@@ -135,15 +135,10 @@ def genres():
 
 # Favoris de l'utilisateur
 @app.route('/favoris')
-@login_required
 def favoris():
     conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT media.* FROM favorites
-        JOIN media ON media.media_id = favorites.media_id
-        WHERE favorites.user_id = %s
-    """, (current_user.id,))
+    cursor.execute("SELECT * FROM favorites")
     favoris = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -182,6 +177,7 @@ def logout():
     logout_user()
     flash("Vous êtes déconnecté.", "info")
     return redirect(url_for('login'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
