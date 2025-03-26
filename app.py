@@ -36,29 +36,43 @@ class User(UserMixin):
 def load_user(user_id):
     return User(user_id)
 
+
 # Page de connexion
-@app.route('/', methods=['GET','POST'])
+@app.route('/')
+def index():
+    return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
 
+        print("Email reçu :", email)
+        print("Mot de passe reçu :", password)
+
         conn = mysql.connector.connect(**DB_CONFIG)
-        cursor = conn.cursor()
-        cursor.execute("SELECT user_id, password_hash FROM users WHERE email = %s", (email,))
+        cursor = conn.cursor(dictionary=True, buffered=True)
+
+        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
         user = cursor.fetchone()
+
         cursor.close()
         conn.close()
 
-        if user and bcrypt.check_password_hash(user[1], password):
-            login_user(User(user[0]))  # Flask-Login authentifie l’utilisateur
+        if user and bcrypt.check_password_hash(user['password_hash'], password):
+            user_obj = User(user['user_id'])
+            login_user(user_obj)
             flash("Connexion réussie !", "success")
             return redirect(url_for('home'))
         else:
-            flash("Email ou mot de passe incorrect", "danger")
+            flash("Nom d'utilisateur ou mot de passe incorrect", "danger")
             return redirect(url_for('login'))
 
+
     return render_template('login.html')
+
+
 
 # Inscription
 @app.route('/signUp', methods=['GET', 'POST'])
@@ -96,7 +110,7 @@ def sign_up():
 @app.route('/home')
 @login_required
 def home():
-    return render_template("home.html")
+    return render_template('home.html', username=current_user.id)
 
 
 
@@ -179,5 +193,7 @@ def logout():
     return redirect(url_for('login'))
 
 
+
 if __name__ == '__main__':
     app.run(debug=True)
+
