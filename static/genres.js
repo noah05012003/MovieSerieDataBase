@@ -19,9 +19,25 @@ async function fetchGenres(mediaType) {
       form.action = `/add_genre_favori/${genre.id}`;
       form.method = "POST";
 
-      const button = document.createElement("button");
-      button.type = "submit";
-      button.textContent = "Ajouter aux favoris";
+    const button = document.createElement("button");
+    button.type = "submit";
+    button.innerHTML = "&#9825;"; // cœur vide (♡)
+
+    button.classList.add("like-button");
+    button.dataset.liked = "false";
+
+
+    button.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    const liked = button.dataset.liked === "true";
+    button.innerHTML = liked ? "&#9825;" : "&#10084;"; // ♡ ou ❤️
+  button.style.color = liked ? "black" : "red";
+  button.dataset.liked = liked ? "false" : "true";
+
+  // Si tu veux vraiment soumettre le form :
+  // button.closest('form').submit();
+});
 
       form.appendChild(button);
       card.appendChild(title);

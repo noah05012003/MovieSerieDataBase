@@ -114,5 +114,11 @@ CREATE TABLE favorites (
 # - Création d’un compte pour l’utilisateur ou supprimer l’utilisateur
 # -------------------------------
 
-select * From users;
+select * From favorites;
+select * From media;
+
+
+
+
+
 

@@ -149,14 +149,10 @@ def genres():
 
 # Favoris de l'utilisateur
 @app.route('/favoris')
+@login_required
 def favoris():
-    conn = mysql.connector.connect(**DB_CONFIG)
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM favorites")
-    favoris = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return render_template("favoris.html", favoris=favoris)
+    return render_template("favoris.html")
+
 
 # Ajouter un favori
 @app.route('/add_favori/<int:media_id>', methods=['POST'])
@@ -191,6 +187,22 @@ def logout():
     logout_user()
     flash("Vous êtes déconnecté.", "info")
     return redirect(url_for('login'))
+
+@app.route('/api/favoris')
+@login_required
+def api_favoris():
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT m.media_id, m.title, m.poster_path, m.vote_average
+        FROM favorites f
+        JOIN media m ON f.media_id = m.media_id
+        WHERE f.user_id = %s
+    """, (current_user.id,))
+    favoris = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(favoris)
 
 
 

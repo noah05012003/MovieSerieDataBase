@@ -155,24 +155,47 @@ def fetch_and_insert_actors(media_type):
 # -------------------------------
 # 5. Associer les Acteurs aux Médias (Many-to-Many)
 # -------------------------------
-def fetch_and_insert_media_cast(media_type):
-    url = f"{BASE_URL}/{media_type}/popular?api_key={API_KEY}&language=fr-FR"
-    response = requests.get(url)
+def fetch_and_insert_media(media_type, max_pages=5):  # ← Ajoute un paramètre pour paginer
+    db_media_type = "tv" if media_type == "tv" else "movie"
 
-    if response.status_code == 200:
-        data = response.json()['results']
-        for item in data:
-            media_id = item['id']
-            credits_url = f"{BASE_URL}/{media_type}/{media_id}/credits?api_key={API_KEY}&language=fr-FR"
-            credits_response = requests.get(credits_url)
+    for page in range(1, max_pages + 1):  # ← Boucle sur plusieurs pages
+        url = f"{BASE_URL}/{media_type}/popular?api_key={API_KEY}&language=fr-FR&page={page}"
+        response = requests.get(url)
 
-            if credits_response.status_code == 200:
-                cast_data = credits_response.json().get('cast', [])
-                for actor in cast_data[:10]:  # Limite à 10 acteurs par média
-                    cast_id = actor['id']
+        if response.status_code == 200:
+            data = response.json()['results']
+            for item in data:
+                media_id = item['id']
+                title = item.get('title') or item.get('name')
+                overview = item.get('overview')
+                release_date = item.get('release_date') or item.get('first_air_date')
+                vote_average = item.get('vote_average', 0)
+                poster_path = item.get('poster_path')
 
-                    query = "INSERT INTO media_to_cast (media_id, cast_id) VALUES (%s, %s) ON DUPLICATE KEY UPDATE media_id=VALUES(media_id);"
-                    cursor.execute(query, (media_id, cast_id))
+                query = """
+                INSERT INTO media (media_id, title, overview, release_date, vote_average, poster_path, media_type)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE title=VALUES(title);
+                """
+                cursor.execute(query, (media_id, title, overview, release_date, vote_average, poster_path, media_type))
+
+                if db_media_type == "movie":
+                    query_movie = """
+                        INSERT INTO movies (movie_id, media_id)
+                        VALUES (%s, %s)
+                        ON DUPLICATE KEY UPDATE media_id=VALUES(media_id);
+                    """
+                    cursor.execute(query_movie, (media_id, media_id))
+                else:
+                    number_of_seasons = item.get('number_of_seasons', 0)
+                    number_of_episodes = item.get('number_of_episodes', 0)
+
+                    query_series = """
+                        INSERT INTO series (series_id, media_id, number_of_seasons, number_of_episodes)
+                        VALUES (%s, %s, %s, %s)
+                        ON DUPLICATE KEY UPDATE media_id=VALUES(media_id);
+                    """
+                    cursor.execute(query_series, (media_id, media_id, number_of_seasons, number_of_episodes))
 
     cnx.commit()
 
@@ -235,6 +258,10 @@ print("Insertion des films et séries...")
 fetch_and_insert_media("movie")
 fetch_and_insert_media("tv")
 
+print("Insertion des films et séries...")
+fetch_and_insert_media("movie", max_pages=5)  # ← par exemple 5 pages = 100 films
+fetch_and_insert_media("tv", max_pages=5)     # ← idem pour les séries
+
 print("Insertion des genres associés aux médias...")
 fetch_and_insert_media_genres("movie")
 fetch_and_insert_media_genres("tv")
@@ -243,9 +270,6 @@ print("Insertion des acteurs...")
 fetch_and_insert_actors("movie")
 fetch_and_insert_actors("tv")
 
-print("Insertion des acteurs associés aux médias...")
-fetch_and_insert_media_cast("movie")
-fetch_and_insert_media_cast("tv")
 
 print("Insertion des saisons et épisodes...")
 cursor.execute("SELECT series_id FROM series")

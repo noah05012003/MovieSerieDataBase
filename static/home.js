@@ -1,3 +1,18 @@
+//  Fonction pour ajouter aux favoris
+function createFavoriForm(mediaId) {
+  const form = document.createElement("form");
+  form.action = `/add_favori/${mediaId}`;
+  form.method = "POST";
+
+  const button = document.createElement("button");
+  button.type = "submit";
+  button.textContent = "Ajouter aux favoris";
+  button.classList.add("favori-btn");
+
+  form.appendChild(button);
+  return form;
+}
+
 const API_KEY = "8b2f4ba709ce554aa633554c67097989";
 const BASE_URL = "https://api.themoviedb.org/3";
 const mediaContainer = document.getElementById("media-container");
@@ -39,20 +54,12 @@ async function fetchPopularMedia(mediaType, page = 1) {
       const rating = document.createElement("p");
       rating.textContent = `Note (${mediaType === 'movie' ? 'Film' : 'Série'}) : ${media.vote_average.toFixed(1)}/10`;
 
-      const form = document.createElement("form");
-      form.action = `/add_favori/${media.id}`;
-      form.method = "POST";
-
-      const button = document.createElement("button");
-      button.type = "submit";
-      button.textContent = "Ajouter aux favoris";
-
-      form.appendChild(button);
+      const favoriForm = createFavoriForm(media.id); //truc pour add dans favoris
 
       card.appendChild(image);
       card.appendChild(title);
       card.appendChild(rating);
-      card.appendChild(form);
+      card.appendChild(favoriForm);
       mediaContainer.appendChild(card);
     });
     loadingIndicator.style.display = "none";

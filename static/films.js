@@ -1,3 +1,5 @@
+
+
 const API_KEY = "8b2f4ba709ce554aa633554c67097989";
 const BASE_URL = "https://api.themoviedb.org/3";
 const filmsContainer = document.getElementById("films-container");
@@ -46,6 +48,7 @@ async function fetchPopularMovies(page = 1) {
       const button = document.createElement("button");
       button.type = "submit";
       button.textContent = "Ajouter aux favoris";
+
 
       form.appendChild(button);
 

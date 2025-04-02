@@ -1,3 +1,19 @@
+//  Fonction pour ajouter aux favoris
+function createFavoriForm(mediaId) {
+  const form = document.createElement("form");
+  form.action = `/add_favori/${mediaId}`;
+  form.method = "POST";
+
+  const button = document.createElement("button");
+  button.type = "submit";
+  button.textContent = "Ajouter aux favoris";
+  button.classList.add("favori-btn");
+
+  form.appendChild(button);
+  return form;
+}
+
+
 const API_KEY = "8b2f4ba709ce554aa633554c67097989";
 const BASE_URL = "https://api.themoviedb.org/3";
 const seriesContainer = document.getElementById("series-container");
