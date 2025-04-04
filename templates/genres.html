@@ -4,8 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Genres - Screenly</title>
+
+  <!-- Liens vers tes CSS -->
   <link rel="stylesheet" href="/static/home.css">
-    <link rel="stylesheet" href="/static/genres.css">
+  <link rel="stylesheet" href="/static/genres.css">
+
+  <!-- Google Fonts & ScrollReveal -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/scrollreveal"></script>
@@ -43,16 +47,22 @@
       <input type="text" placeholder="Tapez votre recherche..." />
     </div>
   </div>
-  <br><br><br><br><br>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Genres</h1>
+      <p>Découvrez et enregistrez vos genres préférés pour ne rien manquer de vos films et séries.</p>
+    </div>
+  </section>
 
   <!-- MAIN CONTENT -->
   <main>
-    <h1>Genres Disponibles</h1>
+    <h2>Liste des Genres</h2>
     <div class="genres-container" id="genres-container" data-type="genre">
+      <!-- Les cartes de genre seront injectées dynamiquement par genres.js -->
     </div>
   </main>
-
-
 
   <!-- FOOTER -->
   <footer>
@@ -68,9 +78,11 @@
 
   <script src="/static/genres.js"></script>
   <script>
+    // Search overlay logic
     const searchBtn = document.querySelector(".search-trigger");
     const searchOverlay = document.querySelector(".search-overlay");
     const closeSearchBtn = document.querySelector(".close-search-btn");
+
     searchBtn.addEventListener("click", () => {
       searchOverlay.classList.remove("hidden");
       document.body.style.overflow = "hidden";
@@ -85,6 +97,8 @@
         document.body.style.overflow = "auto";
       }
     });
+
+    // ScrollReveal pour les cartes
     const sr = ScrollReveal({
       origin: 'top',
       distance: '80px',

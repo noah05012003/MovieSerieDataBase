@@ -1,30 +1,15 @@
-//  Fonction pour ajouter aux favoris
-function createFavoriForm(mediaId) {
-  const form = document.createElement("form");
-  form.action = `/add_favori/${mediaId}`;
-  form.method = "POST";
-
-  const button = document.createElement("button");
-  button.type = "submit";
-  button.textContent = "Ajouter aux favoris";
-  button.classList.add("favori-btn");
-
-  form.appendChild(button);
-  return form;
-}
-
-
 const API_KEY = "8b2f4ba709ce554aa633554c67097989";
 const BASE_URL = "https://api.themoviedb.org/3";
 const seriesContainer = document.getElementById("series-container");
+// Use the pagination container already in your HTML
+const paginationControls = document.getElementById("pagination-controls");
+
 const loadMoreBtn = document.createElement("button");
 loadMoreBtn.textContent = "Charger plus de séries";
-loadMoreBtn.style.margin = "20px auto";
-loadMoreBtn.style.display = "block";
+loadMoreBtn.classList.add("load-more-btn");
 
 const pageIndicator = document.createElement("p");
-pageIndicator.style.textAlign = "center";
-pageIndicator.style.marginTop = "10px";
+pageIndicator.classList.add("page-info");
 
 const loadingIndicator = document.createElement("p");
 loadingIndicator.textContent = "Chargement des séries...";
@@ -55,6 +40,7 @@ async function fetchPopularSeries(page = 1) {
       const rating = document.createElement("p");
       rating.textContent = `Note : ${serie.vote_average.toFixed(1)}/10`;
 
+      // Create the favori form using the favori-btn class for styling
       const form = document.createElement("form");
       form.action = `/add_favori/${serie.id}`;
       form.method = "POST";
@@ -62,6 +48,7 @@ async function fetchPopularSeries(page = 1) {
       const button = document.createElement("button");
       button.type = "submit";
       button.textContent = "Ajouter aux favoris";
+      button.classList.add("favori-btn");
 
       form.appendChild(button);
 
@@ -93,7 +80,9 @@ function loadMoreSeries() {
 pageIndicator.textContent = `Page ${currentPage} sur ${maxPages}`;
 fetchPopularSeries(currentPage);
 
-document.body.appendChild(loadingIndicator);
-document.body.appendChild(loadMoreBtn);
-document.body.appendChild(pageIndicator);
+// Append the controls to the pagination container (inside <main>)
+paginationControls.appendChild(loadingIndicator);
+paginationControls.appendChild(loadMoreBtn);
+paginationControls.appendChild(pageIndicator);
+
 loadMoreBtn.addEventListener("click", loadMoreSeries);

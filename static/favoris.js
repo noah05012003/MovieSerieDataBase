@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       data.forEach(media => {
-        if (!media.title || !media.poster_path) return; // ⛔️ Skip si info manquante
+        if (!media.title || !media.poster_path) return; // Saut si info manquante
 
         const card = document.createElement("div");
         card.classList.add("media-card");
@@ -44,9 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         title.textContent = media.title;
 
         const rating = document.createElement("p");
-        const note = typeof media.vote_average === "number"
-          ? media.vote_average.toFixed(1)
-          : "N/A";
+        const note = typeof media.vote_average === "number" ? media.vote_average.toFixed(1) : "N/A";
         rating.textContent = `Note : ${note}/10`;
 
         const form = createRemoveFavoriForm(media.media_id);

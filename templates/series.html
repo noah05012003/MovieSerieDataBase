@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Séries - Screenly</title>
   <link rel="stylesheet" href="/static/home.css">
-    <link rel="stylesheet" href="/static/series.css">
+  <link rel="stylesheet" href="/static/series.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/scrollreveal"></script>
@@ -43,15 +43,24 @@
       <input type="text" placeholder="Tapez votre recherche..." />
     </div>
   </div>
-  <br><br><br><br><br>
+
+  <!-- HERO SECTION  -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Séries</h1>
+      <p>Plongez dans nos séries captivantes et ne manquez aucun épisode.</p>
+    </div>
+  </section>
+  <br><br><br><br><br><br>
 
   <!-- MAIN CONTENT -->
   <main>
-    <h1>Séries</h1>
-    <!-- data-type set to "tv" so home.js knows to load series -->
+    <!-- Container for series cards -->
     <div class="series-container" id="series-container">
-      <!-- series.js will dynamically inject series cards here -->
+      
     </div>
+    <!-- Pagination controls container -->
+    <div id="pagination-controls"></div>
   </main>
  
   <!-- FOOTER -->
@@ -71,20 +80,24 @@
     const searchBtn = document.querySelector(".search-trigger");
     const searchOverlay = document.querySelector(".search-overlay");
     const closeSearchBtn = document.querySelector(".close-search-btn");
+
     searchBtn.addEventListener("click", () => {
       searchOverlay.classList.remove("hidden");
       document.body.style.overflow = "hidden";
     });
+
     closeSearchBtn.addEventListener("click", () => {
       searchOverlay.classList.add("hidden");
       document.body.style.overflow = "auto";
     });
+
     searchOverlay.addEventListener("click", (e) => {
       if (e.target === searchOverlay) {
         searchOverlay.classList.add("hidden");
         document.body.style.overflow = "auto";
       }
     });
+
     const sr = ScrollReveal({
       origin: 'top',
       distance: '80px',

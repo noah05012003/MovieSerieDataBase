@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Accueil - Screenly</title>
 
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 
-  <!-- Your existing CSS -->
+  <!-- Main CSS -->
   <link rel="stylesheet" href="/static/home.css">
 
-  <!-- ScrollReveal (if you want reveal animations) -->
+  <!-- ScrollReveal (optional) -->
   <script src="https://unpkg.com/scrollreveal"></script>
 </head>
 <body>
@@ -20,9 +21,7 @@
   <header class="top-nav">
     <div class="nav-left">
       <img src="/static/img/logo.png" alt="Screenly Logo" class="logo"/>
-
       <ul class="nav-menu">
-      
         <li><a href="/home" class="active">Accueil</a></li>
         <li><a href="/movies">Films</a></li>
         <li><a href="/series">Séries</a></li>
@@ -31,7 +30,7 @@
       </ul>
     </div>
     <div class="nav-right">
-      <!-- Magnifying Glass (inline SVG) -->
+      <!-- Search Trigger -->
       <button class="search-trigger" aria-label="Search">
         <svg width="24" height="24" fill="none" stroke="#fff" stroke-linecap="round" 
              stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
@@ -39,7 +38,6 @@
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
       </button>
-
       <!-- Sign In Button -->
       <a href="/" class="sign-in-btn">Sign In</a>
     </div>
@@ -54,7 +52,7 @@
     </div>
   </div>
 
-  <!-- HERO CAROUSEL SECTION -->
+  <!-- HERO CAROUSEL SECTION (Example) -->
   <div class="carousel-container">
     <!-- Slide 1 -->
     <div class="carousel-slide" style="background-image: url('/static/img/house.png');">
@@ -70,63 +68,7 @@
       </div>
     </div>
 
-    <!-- Slide 2 -->
-    <div class="carousel-slide" style="background-image: url('/static/img/mentalist.jpg');">
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <h2 class="slide-title">The Mentalist</h2>
-        <p class="slide-description">
-          Patrick Jane résout des affaires complexes grâce à ses incroyables talents d’observation.
-        </p>
-        <span class="slide-tag">#4 au Canada</span>
-        <button class="watch-now-btn">Visionner</button>
-        <p class="slide-included">Inclus avec Screenly</p>
-      </div>
-    </div>
-
-    <!-- Slide 3 -->
-    <div class="carousel-slide" style="background-image: url('/static/img/reacher.jpg');">
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <h2 class="slide-title">Reacher</h2>
-        <p class="slide-description">
-          Jack Reacher, ex-militaire, défend la justice partout où il passe.
-        </p>
-        <span class="slide-tag">#1 au Canada</span>
-        <button class="watch-now-btn">Visionner</button>
-        <p class="slide-included">Inclus avec Screenly</p>
-      </div>
-    </div>
-
-    <!-- Slide 4 (Suits) -->
-    <div class="carousel-slide" style="background-image: url('/static/img/suits.png');">
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <h2 class="slide-title">Suits</h2>
-        <p class="slide-description">
-          De jeunes avocats brillants naviguent dans le monde impitoyable des affaires et de la justice.
-        </p>
-        <span class="slide-tag">#3 au Canada</span>
-        <button class="watch-now-btn">Visionner</button>
-        <p class="slide-included">Inclus avec Screenly</p>
-      </div>
-    </div>
-
-    <!-- Slide 5 (The Office) -->
-    <div class="carousel-slide" style="background-image: url('/static/img/office.png');">
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <h2 class="slide-title">The Office</h2>
-        <p class="slide-description">
-          Une équipe de bureau loufoque fait face aux absurdités du quotidien dans cette comédie culte.
-        </p>
-        <span class="slide-tag">#5 au Canada</span>
-        <button class="watch-now-btn">Visionner</button>
-        <p class="slide-included">Inclus avec Screenly</p>
-      </div>
-    </div>
-
-    <!-- Carousel Navigation Arrows -->
+    <!-- More slides ... -->
     <button class="carousel-btn prev-btn">&#10094;</button>
     <button class="carousel-btn next-btn">&#10095;</button>
   </div>
@@ -134,9 +76,16 @@
   <!-- MAIN CONTENT -->
   <main>
     <h1>Populaire cette semaine</h1>
-    <div class="media-container" id="media-container">
-      <!-- Your home.js script will inject DB-based movie/series cards here -->
-    </div>
+
+    <!-- Where your media cards go -->
+    <div class="media-container" id="media-container"></div>
+
+    <!-- 
+      Pagination controls container 
+      (We will append "Chargement...", "Charger plus" button, 
+      and "Page X sur Y" text here from JS.)
+    -->
+    <div id="pagination-controls"></div>
   </main>
 
   <!-- FOOTER -->
@@ -151,12 +100,9 @@
     <p>© 2025 Screenly. Tous droits réservés.</p>
   </footer>
 
-  <!-- 1) Your old home.js for DB injection -->
-  <script src="/static/home.js"></script>
-
-  <!-- 2) Inline Script for Carousel, Overlay, and (optional) ScrollReveal -->
+  <!-- Inline Script: your fetch logic + carousel + search overlay, etc. -->
   <script>
-    // === Carousel Logic ===
+    /* ================== Carousel Logic (Optional) ================== */
     const slides = document.querySelectorAll(".carousel-slide");
     const prevBtn = document.querySelector(".prev-btn");
     const nextBtn = document.querySelector(".next-btn");
@@ -185,24 +131,21 @@
       showSlide(currentSlide);
     }, 5000);
 
-    // === Search Overlay Logic ===
+    /* ================== Search Overlay Logic ================== */
     const searchBtn = document.querySelector(".search-trigger");
     const searchOverlay = document.querySelector(".search-overlay");
     const closeSearchBtn = document.querySelector(".close-search-btn");
 
-    // Show overlay
     searchBtn.addEventListener("click", () => {
       searchOverlay.classList.remove("hidden");
-      document.body.style.overflow = "hidden"; // prevent scrolling
+      document.body.style.overflow = "hidden";
     });
 
-    // Close overlay
     closeSearchBtn.addEventListener("click", () => {
       searchOverlay.classList.add("hidden");
-      document.body.style.overflow = "auto"; // restore scrolling
+      document.body.style.overflow = "auto";
     });
 
-    // Click outside content to close
     searchOverlay.addEventListener("click", (e) => {
       if (e.target === searchOverlay) {
         searchOverlay.classList.add("hidden");
@@ -210,15 +153,111 @@
       }
     });
 
-   
-  
-     const sr = ScrollReveal({
-       origin: 'top',
+    /* ================== ScrollReveal (Optional) ================== */
+    const sr = ScrollReveal({
+      origin: 'top',
       distance: '80px',
-       duration: 2000,
-       reset: false
-     });
+      duration: 2000,
+      reset: false
+    });
     sr.reveal('.media-card', { interval: 200 });
+
+    /* ================== Fetch Logic & "Charger plus" Button ================== */
+    function createFavoriForm(mediaId) {
+      const form = document.createElement("form");
+      form.action = `/add_favori/${mediaId}`;
+      form.method = "POST";
+
+      const button = document.createElement("button");
+      button.type = "submit";
+      button.textContent = "Ajouter aux favoris";
+      button.classList.add("favori-btn");
+
+      form.appendChild(button);
+      return form;
+    }
+
+    const API_KEY = "8b2f4ba709ce554aa633554c67097989";
+    const BASE_URL = "https://api.themoviedb.org/3";
+    const mediaContainer = document.getElementById("media-container");
+
+    // 1) Create "Charger plus" button, page indicator, loading indicator
+    const loadMoreBtn = document.createElement("button");
+    loadMoreBtn.classList.add("load-more-btn");
+    loadMoreBtn.textContent = "Charger plus";
+
+    const pageIndicator = document.createElement("p");
+    pageIndicator.classList.add("page-info");
+
+    const loadingIndicator = document.createElement("p");
+    loadingIndicator.textContent = "Chargement...";
+    loadingIndicator.style.display = "none"; // hidden by default
+
+    // 2) We'll place them in the #pagination-controls, not body
+    const paginationControls = document.getElementById("pagination-controls");
+    paginationControls.appendChild(loadingIndicator);
+    paginationControls.appendChild(loadMoreBtn);
+    paginationControls.appendChild(pageIndicator);
+
+    let currentPage = 1;
+    let maxPages = 5;
+
+    async function fetchPopularMedia(mediaType, page = 1) {
+      try {
+        loadingIndicator.style.display = "block";
+        const response = await fetch(`${BASE_URL}/${mediaType}/popular?api_key=${API_KEY}&language=fr-FR&page=${page}`);
+        const data = await response.json();
+        const mediaList = data.results;
+
+        mediaList.forEach(media => {
+          const card = document.createElement("div");
+          card.classList.add("media-card");
+
+          const image = document.createElement("img");
+          image.src = `https://image.tmdb.org/t/p/w300${media.poster_path}`;
+          image.alt = media.title || media.name;
+
+          const title = document.createElement("h3");
+          title.textContent = media.title || media.name;
+
+          const rating = document.createElement("p");
+          rating.textContent = `Note (${mediaType === 'movie' ? 'Film' : 'Série'}) : ${media.vote_average.toFixed(1)}/10`;
+
+          const favoriForm = createFavoriForm(media.id);
+
+          card.appendChild(image);
+          card.appendChild(title);
+          card.appendChild(rating);
+          card.appendChild(favoriForm);
+          mediaContainer.appendChild(card);
+        });
+        loadingIndicator.style.display = "none";
+      } catch (error) {
+        console.error("Erreur lors de la récupération des médias :", error);
+        loadingIndicator.style.display = "none";
+      }
+    }
+
+    function loadMore() {
+      if (currentPage < maxPages) {
+        currentPage++;
+        pageIndicator.textContent = `Page ${currentPage} sur ${maxPages}`;
+        // Load more movies + series
+        fetchPopularMedia("movie", currentPage);
+        fetchPopularMedia("tv", currentPage);
+      } else {
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.textContent = "Aucune page supplémentaire";
+      }
+    }
+
+    // Initial load
+    pageIndicator.textContent = `Page ${currentPage} sur ${maxPages}`;
+    fetchPopularMedia("movie", currentPage);
+    fetchPopularMedia("tv", currentPage);
+
+    // Attach event
+    loadMoreBtn.addEventListener("click", loadMore);
   </script>
 </body>
 </html>

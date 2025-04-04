@@ -1,7 +1,114 @@
+/* Global Background & Typographie */
+body {
+  background: #0D0D0D;
+  color: #fff;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* HERO SECTION */
+.hero {
+  position: relative;
+  height: 300px;
+  background: linear-gradient(135deg, #1c1c1c 0%, #121212 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.hero-content {
+  z-index: 1;
+  max-width: 800px;
+  padding: 0 20px;
+}
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+.hero-content p {
+  font-size: 1.2rem;
+  color: #ccc;
+}
+
+/* MAIN CONTENT */
+main {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+main h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+/* GRILLE DES GENRES */
 .genres-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  justify-items: center;
+  gap: 20px;
 }
 
+/* CARTES DES GENRES (GLASSMORPHISM) */
+.genre-card {
+  position: relative;
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 25px 20px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+.genre-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 20px rgba(0,0,0,0.3);
+}
+.genre-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+/* ICÔNE CŒUR */
+.like-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 2.2rem;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+}
+.like-button:hover {
+  transform: scale(1.2);
+  color: red;
+}
+
+/* RESPONSIVITÉ */
+@media (max-width: 768px) {
+  .hero {
+    height: 200px;
+  }
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  .hero-content p {
+    font-size: 1rem;
+  }
+  .genres-container {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  .genre-card {
+    padding: 20px 15px;
+  }
+  .genre-card h3 {
+    font-size: 1.1rem;
+  }
+  .like-button {
+    font-size: 2rem;
+  }
+}

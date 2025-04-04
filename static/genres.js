@@ -9,37 +9,37 @@ async function fetchGenres(mediaType) {
     const genres = data.genres;
 
     genres.forEach(genre => {
+      // Création de la carte
       const card = document.createElement("div");
-      card.classList.add("media-card");
+      card.classList.add("genre-card", "media-card");
 
+      // Titre du genre
       const title = document.createElement("h3");
       title.textContent = genre.name;
 
+      // Création du formulaire pour la logique "favori"
       const form = document.createElement("form");
       form.action = `/add_genre_favori/${genre.id}`;
       form.method = "POST";
 
-    const button = document.createElement("button");
-    button.type = "submit";
-    button.innerHTML = "&#9825;"; // cœur vide (♡)
+      // Création de l'icône cœur
+      const heart = document.createElement("span");
+      heart.innerHTML = "&#9825;"; // Cœur vide (♡)
+      heart.classList.add("like-button");
+      heart.dataset.liked = "false";
 
-    button.classList.add("like-button");
-    button.dataset.liked = "false";
+      // Logique de basculement du cœur
+      heart.addEventListener("click", function(e) {
+        e.preventDefault();
+        const liked = heart.dataset.liked === "true";
+        heart.innerHTML = liked ? "&#9825;" : "&#10084;"; // Passe de ♡ à ❤️
+        heart.style.color = liked ? "#fff" : "red";
+        heart.dataset.liked = liked ? "false" : "true";
+        // Pour soumettre réellement le formulaire, décommente la ligne suivante :
+        // form.submit();
+      });
 
-
-    button.addEventListener("click", function (e) {
-    e.preventDefault();
-
-    const liked = button.dataset.liked === "true";
-    button.innerHTML = liked ? "&#9825;" : "&#10084;"; // ♡ ou ❤️
-  button.style.color = liked ? "black" : "red";
-  button.dataset.liked = liked ? "false" : "true";
-
-  // Si tu veux vraiment soumettre le form :
-  // button.closest('form').submit();
-});
-
-      form.appendChild(button);
+      form.appendChild(heart);
       card.appendChild(title);
       card.appendChild(form);
       genreContainer.appendChild(card);
@@ -49,6 +49,6 @@ async function fetchGenres(mediaType) {
   }
 }
 
-// Charger genres films et series
+// Charger les genres pour "movie" et "tv"
 fetchGenres("movie");
 fetchGenres("tv");

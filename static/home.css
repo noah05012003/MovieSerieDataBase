@@ -45,11 +45,10 @@ body {
   color: #bbb;
   font-weight: 500;
   transition: background-color 0.3s, color 0.3s;
-  padding: 5px 8px; /* Padding for hover background */
+  padding: 5px 8px;
   border-radius: 4px;
 }
 
-/* White box hover effect for nav links */
 .nav-menu li a:hover,
 .nav-menu li a.active:hover {
   background-color: #fff;
@@ -62,7 +61,7 @@ body {
   gap: 15px;
 }
 
-/* Rechercher Button (instead of icon) */
+/* Search Button */
 .search-trigger {
   background: transparent;
   color: #bbb;
@@ -82,13 +81,14 @@ body {
 
 /* Sign In Button */
 .sign-in-btn {
+  display: inline-block;
   background: transparent;
   color: #bbb;
   border: 2px solid #333;
   padding: 8px 20px;
   border-radius: 4px;
   font-weight: 500;
-  cursor: pointer;
+  text-decoration: none;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
@@ -331,7 +331,8 @@ main h1 {
   padding: 0.5rem;
 }
 
-.media-card button {
+/* Favorite Button (if you want a style) */
+.favori-btn {
   background-color: transparent;
   color: #fff;
   border: 2px solid #fff;
@@ -341,10 +342,37 @@ main h1 {
   font-size: 0.9rem;
   transition: background-color 0.3s, border-color 0.3s;
 }
-
-.media-card button:hover {
+.favori-btn:hover {
   background-color: rgba(255,255,255,0.2);
   border-color: #fff;
+}
+
+/* Pagination Controls (above footer) */
+#pagination-controls {
+  text-align: center;
+  margin: 40px 0 0 0; /* top margin 40px, no bottom margin */
+}
+
+.load-more-btn {
+  background: linear-gradient(45deg, #444, #666);
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+  margin-bottom: 10px; /* space before page info */
+}
+
+.load-more-btn:hover {
+  background: linear-gradient(45deg, #666, #444);
+  transform: scale(1.05);
+}
+
+.page-info {
+  color: #bbb;
+  font-size: 0.9rem;
 }
 
 /* Footer */
@@ -354,6 +382,7 @@ footer {
   text-align: center;
   color: #aaa;
   border-top: 1px solid rgba(255,255,255,0.1);
+  margin-top: 40px;
 }
 
 .footer-links {

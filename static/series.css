@@ -1,6 +1,43 @@
+/* HERO SECTION (copied from genres.css) */
+.hero {
+  position: relative;
+  height: 300px;
+  background: linear-gradient(135deg, #1c1c1c 0%, #121212 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-content {
+  z-index: 1;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  color: #ccc;
+}
+
+/* Main heading style if you want it consistent with genres */
+main h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+/* Existing container (unchanged) */
 .series-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
   justify-items: center;
 }
+
+/* If you had media-card styles, they remain the same or you can add them below */
