@@ -115,7 +115,8 @@ CREATE TABLE favorites (
 # -------------------------------
 
 select * From favorites;
-select * From media;
+select * From users;
+
 
 
 

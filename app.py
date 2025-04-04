@@ -49,7 +49,7 @@ def login():
         password = request.form['password']
 
         print("Email reçu :", email)
-        print("Mot de passe reçu :", password)
+
 
         conn = mysql.connector.connect(**DB_CONFIG)
         cursor = conn.cursor(dictionary=True, buffered=True)
@@ -207,5 +207,5 @@ def api_favoris():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='127.0.0.1', port=5000)
 
