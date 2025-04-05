@@ -112,3 +112,8 @@ main h2 {
     font-size: 2rem;
   }
 }
+.like-button:hover {
+  transform: scale(1.2);
+  transition: transform 0.2s;
+}
+

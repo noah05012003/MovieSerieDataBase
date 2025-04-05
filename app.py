@@ -106,11 +106,19 @@ def sign_up():
             conn.close()
     return render_template("signUp.html")
 
-# Accueil
+
+#Acceuil
 @app.route('/home')
 @login_required
 def home():
-    return render_template('home.html', username=current_user.id)
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT username FROM users WHERE user_id = %s", (current_user.id,))
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    return render_template('home.html', username=user['username'])
 
 
 
@@ -136,6 +144,7 @@ def series():
     conn.close()
     return render_template("series.html", series=series)
 
+# Affichage des genres
 # Affichage des genres
 @app.route('/genres')
 def genres():
@@ -198,6 +207,58 @@ def api_favoris():
         FROM favorites f
         JOIN media m ON f.media_id = m.media_id
         WHERE f.user_id = %s
+    """, (current_user.id,))
+    favoris = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(favoris)
+
+# Favoris de genres
+@app.route('/add_genre_favori/<int:genre_id>', methods=['POST'])
+@login_required
+def add_genre_favori(genre_id):
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+    cursor.execute("INSERT IGNORE INTO genre_favorites (user_id, genre_id) VALUES (%s, %s)", (current_user.id, genre_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    flash("Genre ajouté aux favoris", "success")
+    return redirect(url_for('genres'))
+
+@app.route('/api/genres')
+@login_required
+def api_genres():
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT genre_id, name FROM genres")
+    genres = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(genres)
+
+@app.route('/remove_genre_favori/<int:genre_id>', methods=['POST'])
+@login_required
+def remove_genre_favori(genre_id):
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM genre_favorites WHERE user_id = %s AND genre_id = %s", (current_user.id, genre_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    flash("Genre retiré des favoris", "info")
+    return redirect(url_for('genres'))
+
+@app.route('/api/genres_favoris')
+@login_required
+def api_genres_favoris():
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT g.genre_id, g.name
+        FROM genre_favorites gf
+        JOIN genres g ON gf.genre_id = g.genre_id
+        WHERE gf.user_id = %s
     """, (current_user.id,))
     favoris = cursor.fetchall()
     cursor.close()

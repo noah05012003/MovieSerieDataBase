@@ -105,6 +105,13 @@ CREATE TABLE favorites (
     FOREIGN KEY (media_id) REFERENCES media(media_id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
+CREATE TABLE genre_favorites (
+    user_id INT,
+    genre_id INT,
+    PRIMARY KEY (user_id, genre_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (genre_id) REFERENCES genres(genre_id) ON DELETE CASCADE);
+
 
 -- Indexation pour améliorer les performances:
 
@@ -116,6 +123,9 @@ CREATE TABLE favorites (
 
 select * From favorites;
 select * From users;
+select * From genre_favorites;
+select * From genres;
+
 
 
 

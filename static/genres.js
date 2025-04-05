@@ -1,54 +1,47 @@
-const API_KEY = "8b2f4ba709ce554aa633554c67097989";
-const BASE_URL = "https://api.themoviedb.org/3";
-const genreContainer = document.getElementById("genres-container");
+document.addEventListener("DOMContentLoaded", async () => {
+  const container = document.getElementById("genres-container");
 
-async function fetchGenres(mediaType) {
   try {
-    const response = await fetch(`${BASE_URL}/genre/${mediaType}/list?api_key=${API_KEY}&language=fr-FR`);
-    const data = await response.json();
-    const genres = data.genres;
+    const resGenres = await fetch("/api/genres");
+    const resFavoris = await fetch("/api/genres_favoris");
+
+    const genres = await resGenres.json();
+    const favoris = await resFavoris.json();
+
+    const favorisIds = new Set(favoris.map(g => g.genre_id));
 
     genres.forEach(genre => {
-      // Création de la carte
       const card = document.createElement("div");
-      card.classList.add("genre-card", "media-card");
+      card.classList.add("genre-card");
 
-      // Titre du genre
       const title = document.createElement("h3");
       title.textContent = genre.name;
 
-      // Création du formulaire pour la logique "favori"
       const form = document.createElement("form");
-      form.action = `/add_genre_favori/${genre.id}`;
       form.method = "POST";
+      form.action = favorisIds.has(genre.genre_id)
+        ? `/remove_genre_favori/${genre.genre_id}`
+        : `/add_genre_favori/${genre.genre_id}`;
 
-      // Création de l'icône cœur
-      const heart = document.createElement("span");
-      heart.innerHTML = "&#9825;"; // Cœur vide (♡)
+      const heart = document.createElement("button");
+      heart.type = "submit";
+      heart.innerHTML = favorisIds.has(genre.genre_id) ? "❤️" : "♡";
       heart.classList.add("like-button");
-      heart.dataset.liked = "false";
-
-      // Logique de basculement du cœur
-      heart.addEventListener("click", function(e) {
-        e.preventDefault();
-        const liked = heart.dataset.liked === "true";
-        heart.innerHTML = liked ? "&#9825;" : "&#10084;"; // Passe de ♡ à ❤️
-        heart.style.color = liked ? "#fff" : "red";
-        heart.dataset.liked = liked ? "false" : "true";
-        // Pour soumettre réellement le formulaire, décommente la ligne suivante :
-        // form.submit();
-      });
+      heart.style.fontSize = "1.8rem";
+      heart.style.border = "none";
+      heart.style.background = "transparent";
+      heart.style.cursor = "pointer";
 
       form.appendChild(heart);
       card.appendChild(title);
       card.appendChild(form);
-      genreContainer.appendChild(card);
+      container.appendChild(card);
     });
   } catch (error) {
-    console.error("Erreur lors de la récupération des genres :", error);
+    console.error("❌ Impossible de charger les genres :", error);
+    const msg = document.createElement("p");
+    msg.textContent = "Erreur lors du chargement des genres.";
+    msg.style.color = "red";
+    container.appendChild(msg);
   }
-}
-
-// Charger les genres pour "movie" et "tv"
-fetchGenres("movie");
-fetchGenres("tv");
+});

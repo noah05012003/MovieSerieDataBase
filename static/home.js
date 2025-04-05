@@ -81,6 +81,7 @@ function loadMore() {
   }
 }
 
+
 // Initial load
 pageIndicator.textContent = `Page ${currentPage} sur ${maxPages}`;
 fetchPopularMedia("movie", currentPage);
