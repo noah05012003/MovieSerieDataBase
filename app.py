@@ -145,7 +145,7 @@ def series():
     return render_template("series.html", series=series)
 
 # Affichage des genres
-# Affichage des genres
+
 @app.route('/genres')
 def genres():
     conn = mysql.connector.connect(**DB_CONFIG)
