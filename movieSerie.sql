@@ -114,17 +114,119 @@ CREATE TABLE genre_favorites (
 
 
 -- Indexation pour améliorer les performances:
+#1 - Pour accélérer les jointures favorites/media
+CREATE INDEX idx_favorites_user ON favorites(user_id);
+CREATE INDEX idx_favorites_media ON favorites(media_id);
 
-# -------------------------------
-# Fonction à faire :
-# - ajouter/retirer un movie ou une serie de Favoris
-# - Création d’un compte pour l’utilisateur ou supprimer l’utilisateur
-# -------------------------------
+#2 - Pour les jointures genre_favorites
+CREATE INDEX idx_genre_fav_user ON genre_favorites(user_id);
+CREATE INDEX idx_genre_fav_genre ON genre_favorites(genre_id);
 
+#3 - Pour filtrer rapidement sur type de média
+CREATE INDEX idx_media_type ON media(media_type);
+
+#4 - Pour optimiser les filtres sur les notes
+CREATE INDEX idx_vote_average ON media(vote_average);
+
+#5 - Pour les tris/recherches par date
+CREATE INDEX idx_release_date ON media(release_date);
+#Test index :
+SHOW INDEX FROM favorites;
+SHOW INDEX FROM media;
+SHOW INDEX FROM genre_favorites;
+
+#Visualisation des tables
 select * From favorites;
 select * From users;
 select * From genre_favorites;
 select * From genres;
+select * From media_to_genres;
+select * From media;
+select * From series;
+select * From seasons;
+select * From episodes;
+
+#Requêtes SQL
+#1- Liste des genres les plus populaires (selon les favoris des utilisateurs)
+SELECT g.name AS genre, COUNT(*) AS total_favoris
+FROM genre_favorites gf
+JOIN genres g ON gf.genre_id = g.genre_id
+GROUP BY g.genre_id
+ORDER BY total_favoris DESC;
+
+#2- Films ou séries les mieux notés par type
+SELECT media_type, title, vote_average
+FROM media
+WHERE vote_average IS NOT NULL
+ORDER BY vote_average DESC
+LIMIT 10;
+
+#3- Nombre de favoris par utilisateur
+SELECT u.username, COUNT(f.media_id) AS total_favoris
+FROM users u
+LEFT JOIN favorites f ON u.user_id = f.user_id
+GROUP BY u.user_id
+ORDER BY total_favoris DESC;
+
+#4- Utilisateurs n’ayant aucun favori
+SELECT u.username
+FROM users u
+LEFT JOIN favorites f ON u.user_id = f.user_id
+WHERE f.media_id IS NULL;
+
+#Trigger :  Mettre à jour un champ last_favori_ad dans la table users quand un favori est ajouté
+ALTER TABLE users ADD COLUMN last_favori_add DATETIME;
+
+DELIMITER //
+CREATE TRIGGER update_last_favori
+AFTER INSERT ON favorites
+FOR EACH ROW
+BEGIN
+    UPDATE users
+    SET last_favori_add = NOW()
+    WHERE user_id = NEW.user_id;
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+
+#Procédure stockée qui retourne tous les favoris d’un utilisateur
+DELIMITER //
+CREATE PROCEDURE NomDesFavorisUser(IN uid INT)
+BEGIN
+    SELECT m.media_id, m.title, m.vote_average, m.poster_path
+    FROM favorites f
+    JOIN media m ON f.media_id = m.media_id
+    WHERE f.user_id = uid;
+END;
+//
+DELIMITER ;
+CALL NomDesFavorisUser(7)  #utiliisation de la procédure
+
+#Fonction qui calcule la note moyenne (vote_average) de tous les médias favoris d’un utilisateur
+DELIMITER //
+
+CREATE FUNCTION AverageRatingOfUserFavorites(uid INT)
+RETURNS DECIMAL(3,1)
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+  DECLARE avg_rating DECIMAL(3,1);
+
+  SELECT AVG(m.vote_average)
+  INTO avg_rating
+  FROM favorites f
+  JOIN media m ON f.media_id = m.media_id
+  WHERE f.user_id = uid;
+
+  RETURN avg_rating;
+END;
+//
+
+DELIMITER ;
+SELECT AverageRatingOfUserFavorites(8) AS moyenne_favoris;
+
 
 
 
