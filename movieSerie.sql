@@ -202,7 +202,7 @@ BEGIN
 END;
 //
 DELIMITER ;
-CALL NomDesFavorisUser(7)  #utiliisation de la procédure
+CALL NomDesFavorisUser(8); #utiliisation de la procédure
 
 #Fonction qui calcule la note moyenne (vote_average) de tous les médias favoris d’un utilisateur
 DELIMITER //
